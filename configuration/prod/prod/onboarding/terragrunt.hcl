@@ -12,7 +12,7 @@ terraform {
       "-var-file=${get_terragrunt_dir()}/../terraform.tfvars",
       "-var-file=${get_terragrunt_dir()}/terraform.tfvars",
       "-var",
-      "common_dir=${get_terragrunt_dir()}/../../../common/auth",
+      "common_dir=${get_terragrunt_dir()}/../../../common/onboarding",
       "-var",
       "account_dir=${get_terragrunt_dir()}/../../",
       "-var",

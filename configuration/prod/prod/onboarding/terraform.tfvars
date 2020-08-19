@@ -1,6 +1,6 @@
 # Tier Level Configuration
 tier_tags = {
-  tier = "auth"
+  tier = "onboarding"
 }
 
 tier_config = {}
