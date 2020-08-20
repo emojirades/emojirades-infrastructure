@@ -64,4 +64,6 @@ locals {
   tier_tags = merge(var.overall_tags, var.account_tags, var.environment_tags, var.tier_tags)
 
   prefix = "${local.resource_prefix}-${local.environment}"
+
+  onboarding_bucket = local.environment == "prod" ? "emojirades" : "emojirades-${local.environment}"
 }

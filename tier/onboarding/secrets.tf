@@ -2,6 +2,7 @@ locals {
   default_onboarding_secret = {
     "CLIENT_ID": "",
     "CLIENT_SECRET": "",
+    "SCOPE": "",
   }
 }
 

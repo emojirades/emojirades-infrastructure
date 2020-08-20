@@ -36,3 +36,8 @@ resource "aws_iam_role_policy" "onboarding_permissions" {
 
   policy = data.aws_iam_policy_document.onboarding_permissions_policy.json
 }
+
+resource "aws_iam_role_policy_attachment" "onboarding_logging_permissions" {
+  role       = aws_iam_role.onboarding_permissions.id
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
