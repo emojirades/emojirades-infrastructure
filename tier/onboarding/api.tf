@@ -67,17 +67,10 @@ resource "aws_apigatewayv2_api" "onboarding" {
   tags = local.tier_tags
 }
 
-resource "aws_apigatewayv2_stage" "onboarding" {
-  api_id = aws_apigatewayv2_api.onboarding.id
-  name   = local.prefix
-
-  tags = local.tier_tags
-}
-
 resource "aws_apigatewayv2_api_mapping" "onboarding" {
   api_id      = aws_apigatewayv2_api.onboarding.id
   domain_name = aws_apigatewayv2_domain_name.onboarding.id
-  stage       = aws_apigatewayv2_stage.onboarding.id
+  stage       = "$default"
 }
 
 
