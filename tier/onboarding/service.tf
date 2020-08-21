@@ -36,9 +36,7 @@ resource "aws_lambda_function" "onboarding" {
   environment {
     variables = {
       ENVIRONMENT   = local.environment
-      CLIENT_ID     = jsondecode(aws_secretsmanager_secret_version.onboarding.secret_string)["CLIENT_ID"]
-      CLIENT_SECRET = jsondecode(aws_secretsmanager_secret_version.onboarding.secret_string)["CLIENT_SECRET"]
-      SCOPE         = jsondecode(aws_secretsmanager_secret_version.onboarding.secret_string)["SCOPE"]
+      SECRET_ARN    = data.aws_secretsmanager_secret_version.onboarding.arn
       STATE_TABLE   = aws_dynamodb_table.onboarding.id
     }
   }

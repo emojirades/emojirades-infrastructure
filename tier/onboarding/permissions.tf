@@ -28,6 +28,28 @@ data "aws_iam_policy_document" "onboarding_permissions_policy" {
       "arn:aws:s3:::${local.onboarding_bucket}/*",
     ]
   }
+
+  statement {
+    actions = [
+      "dynamodb:GetItem",
+      "dynamodb:PutItem",
+      "dynamodb:UpdateItem",
+    ]
+
+    resources = [
+      aws_dynamodb_table.onboarding.arn,
+    ]
+  }
+
+  statement {
+    actions = [
+      "secretsmanager:GetSecretValue",
+    ]
+
+    resources = [
+      data.aws_secretsmanager_secret_version.onboarding.arn
+    ]
+  }
 }
 
 resource "aws_iam_role_policy" "onboarding_permissions" {
