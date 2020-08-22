@@ -24,7 +24,7 @@ data "aws_iam_policy_document" "onboarding_permissions_policy" {
     ]
 
     resources = [
-      "arn:aws:s3:::${local.emojirades_bucket}/teams/*",
+      "arn:aws:s3:::${local.emojirades_bucket}/workspaces/*",
     ]
   }
 
