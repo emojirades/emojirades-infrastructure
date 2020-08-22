@@ -1,6 +1,7 @@
 # Onboarding Service
 locals {
   onboarding_lambda_timeout = 60
+  onboarding_lambda_name = "${local.prefix}-onboarding-service"
 }
 
 resource "aws_dynamodb_table" "onboarding" {
@@ -45,7 +46,7 @@ resource "aws_sqs_queue" "onboarding" {
 }
 
 resource "aws_lambda_function" "onboarding" {
-	function_name = "${local.prefix}-onboarding-service"
+	function_name = local.onboarding_lambda_name
   description   = "Onboarding Service"
 
   s3_bucket = local.emojirades_bucket
