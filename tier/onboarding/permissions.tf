@@ -33,6 +33,7 @@ data "aws_iam_policy_document" "onboarding_permissions_policy" {
       "dynamodb:GetItem",
       "dynamodb:PutItem",
       "dynamodb:UpdateItem",
+      "dynamodb:DeleteItem",
     ]
 
     resources = [
