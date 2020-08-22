@@ -1,4 +1,8 @@
 # Onboarding Service
+locals {
+  onboarding_lambda_timeout = 60
+}
+
 resource "aws_dynamodb_table" "onboarding" {
   name           = "${local.prefix}-onboarding"
   billing_mode   = "PROVISIONED"
@@ -20,24 +24,46 @@ resource "aws_dynamodb_table" "onboarding" {
   tags = local.tier_tags
 }
 
+resource "aws_sqs_queue" "onboarding_dlq" {
+  name = "${local.prefix}-onboarding-service-dlq"
+
+  tags = local.tier_tags
+}
+
+resource "aws_sqs_queue" "onboarding" {
+  name = "${local.prefix}-onboarding-service"
+
+  delay_seconds              = 5
+  visibility_timeout_seconds = local.onboarding_lambda_timeout * 2
+
+  redrive_policy = jsonencode({
+    deadLetterTargetArn = aws_sqs_queue.onboarding_dlq.arn
+    maxReceiveCount     = 2
+  })
+
+  tags = local.tier_tags
+}
+
 resource "aws_lambda_function" "onboarding" {
 	function_name = "${local.prefix}-onboarding-service"
   description   = "Onboarding Service"
 
-  s3_bucket = local.onboarding_bucket
-  s3_key    = "onboarding_service.zip"
+  s3_bucket = local.emojirades_bucket
+  s3_key    = "functions/onboarding-service.zip"
   handler   = "handler.lambda_handler"
 
   runtime = "python3.8"
 
-  timeout      = 60
+  timeout      = local.onboarding_lambda_timeout
   memory_size  = 128
 
   environment {
     variables = {
-      ENVIRONMENT   = local.environment
-      SECRET_ARN    = data.aws_secretsmanager_secret_version.onboarding.arn
-      STATE_TABLE   = aws_dynamodb_table.onboarding.id
+      ENVIRONMENT = local.environment
+      SECRET_ARN  = data.aws_secretsmanager_secret_version.onboarding.arn
+      STATE_TABLE = aws_dynamodb_table.onboarding.id
+      AUTH_BUCKET = local.emojirades_bucket
+      QUEUE_URL   = aws_sqs_queue.onboarding.id
     }
   }
 

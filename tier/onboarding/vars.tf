@@ -65,5 +65,5 @@ locals {
 
   prefix = "${local.resource_prefix}-${local.environment}"
 
-  onboarding_bucket = local.environment == "prod" ? "emojirades" : "emojirades-${local.environment}"
+  emojirades_bucket = local.environment == "prod" ? "emojirades" : "emojirades-${local.environment}"
 }

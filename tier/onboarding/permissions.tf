@@ -20,12 +20,11 @@ resource "aws_iam_role" "onboarding_permissions" {
 data "aws_iam_policy_document" "onboarding_permissions_policy" {
   statement {
     actions = [
-      "s3:GetObject",
       "s3:PutObject",
     ]
 
     resources = [
-      "arn:aws:s3:::${local.onboarding_bucket}/*",
+      "arn:aws:s3:::${local.emojirades_bucket}/teams/*",
     ]
   }
 
@@ -48,6 +47,16 @@ data "aws_iam_policy_document" "onboarding_permissions_policy" {
 
     resources = [
       data.aws_secretsmanager_secret_version.onboarding.arn
+    ]
+  }
+
+  statement {
+    actions = [
+      "sqs:SendMessage",
+    ]
+
+    resources = [
+      aws_sqs_queue.onboarding.arn
     ]
   }
 }
