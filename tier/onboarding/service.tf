@@ -61,7 +61,7 @@ resource "aws_lambda_function" "onboarding" {
   environment {
     variables = {
       ENVIRONMENT = local.environment
-      SECRET_NAME = data.aws_secretsmanager_secret_version.onboarding.id
+      SECRET_NAME = data.aws_secretsmanager_secret_version.onboarding.arn
       STATE_TABLE = aws_dynamodb_table.onboarding.id
       AUTH_BUCKET = local.emojirades_bucket
       QUEUE_URL   = aws_sqs_queue.onboarding.id
