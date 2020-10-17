@@ -26,20 +26,39 @@ resource "aws_dynamodb_table" "onboarding" {
 }
 
 resource "aws_sqs_queue" "onboarding_dlq" {
-  name = "${local.prefix}-onboarding-service-dlq"
+  count = lookup(var.tier_config, "bot_shard_count")
+
+  name = "${local.prefix}-onboarding-service-dlq-shard-${count.index}"
 
   tags = local.tier_tags
 }
 
 resource "aws_sqs_queue" "onboarding" {
-  name = "${local.prefix}-onboarding-service"
+  count = lookup(var.tier_config, "bot_shard_count")
 
-  delay_seconds              = 5
-  visibility_timeout_seconds = local.onboarding_lambda_timeout * 2
+  name          = "${local.prefix}-onboarding-service-shard-${count.index}"
+  delay_seconds = 5
 
   redrive_policy = jsonencode({
-    deadLetterTargetArn = aws_sqs_queue.onboarding_dlq.arn
+    deadLetterTargetArn = aws_sqs_queue.onboarding_dlq[count.index].arn
     maxReceiveCount     = 2
+  })
+
+  tags = local.tier_tags
+}
+
+resource "aws_sqs_queue" "alerts_dlq" {
+  name = "${local.prefix}-onboarding-service-alerts-dlq"
+
+  tags = local.tier_tags
+}
+
+resource "aws_sqs_queue" "alerts" {
+  name = "${local.prefix}-onboarding-service-alerts"
+
+  redrive_policy = jsonencode({
+    deadLetterTargetArn = aws_sqs_queue.alerts_dlq.arn
+    maxReceiveCount     = 1
   })
 
   tags = local.tier_tags
@@ -60,11 +79,13 @@ resource "aws_lambda_function" "onboarding" {
 
   environment {
     variables = {
-      ENVIRONMENT = local.environment
-      SECRET_NAME = data.aws_secretsmanager_secret_version.onboarding.arn
-      STATE_TABLE = aws_dynamodb_table.onboarding.id
-      AUTH_BUCKET = local.emojirades_bucket
-      QUEUE_URL   = aws_sqs_queue.onboarding.id
+      ENVIRONMENT     = local.environment
+      SECRET_NAME     = data.aws_secretsmanager_secret_version.onboarding.arn
+      STATE_TABLE     = aws_dynamodb_table.onboarding.id
+      CONFIG_BUCKET   = local.emojirades_bucket
+      QUEUE_PREFIX    = "${local.prefix}-onboarding-service-shard-"
+      SHARD_LIMIT     = lookup(var.tier_config, "shard_limit")
+      ALERT_QUEUE_URL = aws_sqs_queue.alerts.id
     }
   }
 
