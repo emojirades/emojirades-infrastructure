@@ -5,4 +5,5 @@ tier_tags = {
 
 tier_config = {
   bot_shard_count = 1
+  shard_limit     = 5
 }

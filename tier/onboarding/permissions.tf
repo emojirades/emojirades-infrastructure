@@ -53,11 +53,12 @@ data "aws_iam_policy_document" "onboarding_permissions_policy" {
 
   statement {
     actions = [
+      "sqs:GetQueueUrl",
       "sqs:SendMessage",
     ]
 
     resources = [
-      aws_sqs_queue.onboarding.arn
+      "arn:aws:sqs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${local.prefix}-onboarding-service-shard-*"
     ]
   }
 }
