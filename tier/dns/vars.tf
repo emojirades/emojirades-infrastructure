@@ -57,7 +57,7 @@ locals {
   environment      = lookup(var.environment_tags, "environment")
   environment_tags = merge(var.overall_tags, var.account_tags, var.environment_tags)
 
-  environment_zone = local.environment == "prod" ? "${lookup(var.overall_config, "parent_zone_name")}" : "${local.environment}.${local.account}.${lookup(var.overall_config, "parent_zone_name")}"
+  environment_zone = local.environment == "prod" ? lookup(var.overall_config, "parent_zone_name") : "${local.environment}.${local.account}.${lookup(var.overall_config, "parent_zone_name")}"
   environment_zone_host = substr(local.environment_zone, 0, length(local.environment_zone) - 1)
 
   tier = lookup(var.tier_tags, "tier")
