@@ -69,7 +69,7 @@ resource "aws_lambda_function" "onboarding" {
   description   = "Onboarding Service"
 
   s3_bucket = local.emojirades_bucket
-  s3_key    = "functions/onboarding-service.zip"
+  s3_key    = lookup(var.tier_config, "function_s3_key")
   handler   = "handler.lambda_handler"
 
   runtime = "python3.8"
