@@ -34,6 +34,7 @@ data "aws_iam_policy_document" "bot_permissions_policy" {
     actions = [
       "sqs:GetQueueUrl",
       "sqs:ReceiveMessage",
+      "sqs:DeleteMessage",
     ]
 
     resources = [
