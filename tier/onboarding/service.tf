@@ -65,7 +65,7 @@ resource "aws_sqs_queue" "alerts" {
 }
 
 resource "aws_lambda_function" "onboarding" {
-	function_name = local.onboarding_lambda_name
+  function_name = local.onboarding_lambda_name
   description   = "Onboarding Service"
 
   s3_bucket = local.emojirades_bucket
@@ -96,7 +96,7 @@ resource "aws_lambda_function" "onboarding" {
 
 resource "aws_lambda_permission" "onboarding_execute" {
   action        = "lambda:InvokeFunction"
-	function_name = aws_lambda_function.onboarding.arn
-	principal     = "apigateway.amazonaws.com"
-	source_arn    = "${aws_apigatewayv2_api.onboarding.execution_arn}/*/*"
+  function_name = aws_lambda_function.onboarding.arn
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_apigatewayv2_api.onboarding.execution_arn}/*/*"
 }

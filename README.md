@@ -5,12 +5,12 @@ This repo holds the terraform that provisions all the emojirades infrastructure 
 ## Install dependencies
 ```bash
 # Linux
-wget -O terraform.zip https://releases.hashicorp.com/terraform/1.0.5/terraform_1.0.5_linux_amd64.zip
+wget -O terraform.zip https://releases.hashicorp.com/terraform/1.0.6/terraform_1.0.6_linux_amd64.zip
 unzip terraform.zip
 sudo mv terraform /usr/bin/
 rm terraform.zip
 
-wget -O terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/v0.31.5/terragrunt_linux_amd64
+wget -O terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/v0.31.8/terragrunt_linux_amd64
 chmod +x terragrunt
 sudo mv terragrunt /usr/bin/
 
