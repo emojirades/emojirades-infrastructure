@@ -30,6 +30,26 @@ data "aws_iam_policy_document" "onboarding_permissions_policy" {
 
   statement {
     actions = [
+      "s3:ListBucket",
+    ]
+
+    resources = [
+      "arn:aws:s3:::${local.emojirades_bucket}",
+    ]
+
+    condition {
+      test     = "StringLike"
+      variable = "s3:prefix"
+
+      values = [
+        "workspaces/shards",
+        "workspaces/shards/*"
+      ]
+    }
+  }
+
+  statement {
+    actions = [
       "dynamodb:GetItem",
       "dynamodb:PutItem",
       "dynamodb:UpdateItem",
