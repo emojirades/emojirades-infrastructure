@@ -25,6 +25,7 @@ data "aws_iam_policy_document" "bot_permissions_policy" {
       variable = "s3:prefix"
 
       values = [
+        "workspaces",
         "workspaces/*",
       ]
     }
